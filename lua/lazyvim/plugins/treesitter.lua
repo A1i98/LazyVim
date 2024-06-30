@@ -22,6 +22,7 @@ return {
       { "<c-space>", desc = "Increment Selection" },
       { "<bs>", desc = "Decrement Selection", mode = "x" },
     },
+    opts_extend = { "ensure_installed" },
     ---@type TSConfig
     ---@diagnostic disable-next-line: missing-fields
     opts = {
@@ -41,6 +42,7 @@ return {
         "luap",
         "markdown",
         "markdown_inline",
+        "printf",
         "python",
         "query",
         "regex",
@@ -64,10 +66,10 @@ return {
       textobjects = {
         move = {
           enable = true,
-          goto_next_start = { ["]f"] = "@function.outer", ["]c"] = "@class.outer" },
-          goto_next_end = { ["]F"] = "@function.outer", ["]C"] = "@class.outer" },
-          goto_previous_start = { ["[f"] = "@function.outer", ["[c"] = "@class.outer" },
-          goto_previous_end = { ["[F"] = "@function.outer", ["[C"] = "@class.outer" },
+          goto_next_start = { ["]f"] = "@function.outer", ["]c"] = "@class.outer", ["]a"] = "@parameter.inner" },
+          goto_next_end = { ["]F"] = "@function.outer", ["]C"] = "@class.outer", ["]A"] = "@parameter.inner" },
+          goto_previous_start = { ["[f"] = "@function.outer", ["[c"] = "@class.outer", ["[a"] = "@parameter.inner" },
+          goto_previous_end = { ["[F"] = "@function.outer", ["[C"] = "@class.outer", ["[A"] = "@parameter.inner" },
         },
       },
     },

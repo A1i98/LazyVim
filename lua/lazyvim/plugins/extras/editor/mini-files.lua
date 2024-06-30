@@ -82,22 +82,22 @@ return {
 
         vim.keymap.set(
           "n",
-          opts.mappings.toggle_hidden or "g.",
+          opts.mappings and opts.mappings.toggle_hidden or "g.",
           toggle_dotfiles,
           { buffer = buf_id, desc = "Toggle hidden files" }
         )
 
         vim.keymap.set(
           "n",
-          opts.mappings.change_cwd or "gc",
+          opts.mappings and opts.mappings.change_cwd or "gc",
           files_set_cwd,
           { buffer = args.data.buf_id, desc = "Set cwd" }
         )
 
-        map_split(buf_id, opts.mappings.go_in_horizontal or "<C-w>s", "horizontal", false)
-        map_split(buf_id, opts.mappings.go_in_vertical or "<C-w>v", "vertical", false)
-        map_split(buf_id, opts.mappings.go_in_horizontal_plus or "<C-w>S", "horizontal", true)
-        map_split(buf_id, opts.mappings.go_in_vertical_plus or "<C-w>V", "vertical", true)
+        map_split(buf_id, opts.mappings and opts.mappings.go_in_horizontal or "<C-w>s", "horizontal", false)
+        map_split(buf_id, opts.mappings and opts.mappings.go_in_vertical or "<C-w>v", "vertical", false)
+        map_split(buf_id, opts.mappings and opts.mappings.go_in_horizontal_plus or "<C-w>S", "horizontal", true)
+        map_split(buf_id, opts.mappings and opts.mappings.go_in_vertical_plus or "<C-w>V", "vertical", true)
       end,
     })
 

@@ -154,9 +154,48 @@ function M.blame_line(opts)
   local cursor = vim.api.nvim_win_get_cursor(0)
   local line = cursor[1]
   local file = vim.api.nvim_buf_get_name(0)
-  local root = LazyVim.root.detectors.pattern(0, { ".git" })[1]
+  local root = LazyVim.root.detectors.pattern(0, { ".git" })[1] or "."
   local cmd = { "git", "-C", root, "log", "-n", opts.count, "-u", "-L", line .. ",+1:" .. file }
   return require("lazy.util").float_cmd(cmd, opts)
+end
+
+function M.browse()
+  local lines = require("lazy.manage.process").exec({ "git", "remote", "-v" })
+  local remotes = {} ---@type {name:string, url:string}[]
+
+  for _, line in ipairs(lines) do
+    local name, url = line:match("(%S+)%s+(%S+)%s+%(fetch%)")
+    if name and url then
+      if url:find("git@") == 1 then
+        url = url:gsub("git@(%S+):", "https://%1/"):gsub(".git$", "")
+      end
+      table.insert(remotes, { name = name, url = url })
+    end
+  end
+
+  local function open(remote)
+    if remote then
+      LazyVim.info(("Opening [%s](%s)"):format(remote.name, remote.url))
+      if vim.fn.has("nvim-0.10") == 0 then
+        require("lazy.util").open(remote.url, { system = true })
+        return
+      end
+      vim.ui.open(remote.url)
+    end
+  end
+
+  if #remotes == 0 then
+    return LazyVim.error("No git remotes found")
+  elseif #remotes == 1 then
+    return open(remotes[1])
+  end
+
+  vim.ui.select(remotes, {
+    prompt = "Select remote to browse",
+    format_item = function(item)
+      return item.name .. (" "):rep(8 - #item.name) .. " 🔗 " .. item.url
+    end,
+  }, open)
 end
 
 return M
